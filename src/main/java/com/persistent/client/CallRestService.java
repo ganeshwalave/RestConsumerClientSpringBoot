@@ -4,6 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -33,7 +35,7 @@ public class CallRestService implements CommandLineRunner{
 		
 	}
 	
-	private static void getTemp() {
+	private static void getAllListofPerson() {
 		RestTemplate restTemplate = new RestTemplate();
 		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
 		converter.setObjectMapper(new ObjectMapper());
@@ -45,12 +47,27 @@ public class CallRestService implements CommandLineRunner{
 		}
 	
 	}
+	
+	private static void getPersonMap() {
+		RestTemplate restTemplate = new RestTemplate();
+		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		converter.setObjectMapper(new ObjectMapper());
+		restTemplate.getMessageConverters().add(converter);		
+		Map<String, Person> response = restTemplate.getForObject("http://localhost:8080/person/all", Map.class);
+		for(Entry<String,Person> per:response.entrySet()) {
+			System.out.println("Person Details are : "+per.toString());
+		}
+	
+	}
 
 	@Override
 	public void run(String... args) throws Exception {
+		System.out.println("Printing Person---------------------------------------");
 		callRestService();
-		System.out.println("---------------------------------------");
-		getTemp();
+		System.out.println("Printing List---------------------------------------");
+		getAllListofPerson();
+		System.out.println("Printing Map---------------------------------------");
+		getPersonMap();
 		
 	}
 }
